@@ -1,9 +1,6 @@
 -- creds Seven7
 local CoreGui = game:GetService("CoreGui")
-local UserInputService = game:GetService("UserInputService")
 local Players = game:GetService("Players")
-
-local player = Players.LocalPlayer
 local ScreenGui = Instance.new("ScreenGui")
 ScreenGui.Name = "Toggleui"
 ScreenGui.Parent = CoreGui
@@ -38,5 +35,7 @@ Corner2.CornerRadius = UDim.new(0.2, 0)
 Corner2.Parent = Image
 
 Toggle.MouseButton1Click:Connect(function()
-    UserInputService.InputBegan:Fire(Enum.KeyCode.LeftShift)
+    keypress(Enum.KeyCode.LeftShift) 
+    wait(0.1)
+    keyrelease(Enum.KeyCode.LeftShift)
 end)
