@@ -1,0 +1,262 @@
+local UserInputService = game:GetService("UserInputService")
+local TweenService = game:GetService("TweenService")
+local RunService = game:GetService("RunService")
+
+local KetHub = Instance.new("ScreenGui")
+KetHub.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
+
+local Frame = Instance.new("Frame")
+local Title = Instance.new("TextLabel")
+local Sidebar = Instance.new("ScrollingFrame")
+local Content = Instance.new("ScrollingFrame")
+local ToggleButton = Instance.new("TextButton")
+
+Frame.Parent = KetHub
+Frame.BackgroundColor3 = Color3.fromRGB(10, 10, 10)
+
+local isMobile = UserInputService.TouchEnabled
+local frameWidth = isMobile and 420 or 840
+local frameHeight = isMobile and 280 or 560
+
+Frame.Size = UDim2.new(0, frameWidth, 0, frameHeight)
+Frame.Position = UDim2.new(0.5, -frameWidth / 2, 0.5, -frameHeight / 2)
+Frame.Draggable = true
+Frame.Active = true
+Frame.BorderSizePixel = 0
+Frame.ClipsDescendants = true
+
+local UICorner = Instance.new("UICorner")
+UICorner.CornerRadius = UDim.new(0, 14)
+UICorner.Parent = Frame
+
+Title.Parent = Frame
+Title.Text = ""
+Title.Size = UDim2.new(1, 0, 0, 40)
+Title.BackgroundColor3 = Color3.fromRGB(5, 5, 5)
+Title.TextColor3 = Color3.fromRGB(255, 50, 50)
+Title.Font = Enum.Font.GothamBold
+Title.TextSize = isMobile and 16 or 18
+
+local UICornerTitle = Instance.new("UICorner")
+UICornerTitle.CornerRadius = UDim.new(0, 14)
+UICornerTitle.Parent = Title
+
+Sidebar.Parent = Frame
+Sidebar.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
+Sidebar.Size = UDim2.new(0, 120, 1, -40)
+Sidebar.Position = UDim2.new(0, 0, 0, 40)
+Sidebar.CanvasSize = UDim2.new(0, 0, 2, 0)
+Sidebar.ScrollBarThickness = 6
+Sidebar.AutomaticCanvasSize = Enum.AutomaticSize.Y
+
+local UICornerSidebar = Instance.new("UICorner")
+UICornerSidebar.CornerRadius = UDim.new(0, 14)
+UICornerSidebar.Parent = Sidebar
+
+Content.Parent = Frame
+Content.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
+Content.Size = UDim2.new(1, -120, 1, -40)
+Content.Position = UDim2.new(0, 120, 0, 40)
+Content.CanvasSize = UDim2.new(0, 0, 2, 0)
+Content.ScrollBarThickness = 6
+Content.AutomaticCanvasSize = Enum.AutomaticSize.Y
+
+local UIListLayout = Instance.new("UIListLayout")
+UIListLayout.Parent = Content
+UIListLayout.SortOrder = Enum.SortOrder.LayoutOrder
+UIListLayout.Padding = UDim.new(0, 5)
+
+local CloseButton = Instance.new("TextButton")
+CloseButton.Parent = Frame
+CloseButton.Size = UDim2.new(0, 30, 0, 30)
+CloseButton.Position = UDim2.new(1, -35, 0, 5)
+CloseButton.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
+CloseButton.Text = "X"
+CloseButton.Font = Enum.Font.GothamBold
+CloseButton.TextSize = isMobile and 14 or 18
+CloseButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+
+local CloseUICorner = Instance.new("UICorner")
+CloseUICorner.CornerRadius = UDim.new(0, 6)
+CloseUICorner.Parent = CloseButton
+
+local MinimizeButton = Instance.new("TextButton")
+MinimizeButton.Parent = Frame
+MinimizeButton.Size = UDim2.new(0, 30, 0, 30)
+MinimizeButton.Position = UDim2.new(1, -70, 0, 5)
+MinimizeButton.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
+MinimizeButton.Text = "-"
+MinimizeButton.Font = Enum.Font.GothamBold
+MinimizeButton.TextSize = isMobile and 14 or 18
+MinimizeButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+
+local MinimizeUICorner = Instance.new("UICorner")
+MinimizeUICorner.CornerRadius = UDim.new(0, 6)
+MinimizeUICorner.Parent = MinimizeButton
+
+CloseButton.MouseButton1Click:Connect(function() 
+    KetHub:Destroy() 
+end)
+
+local SidebarLayout = Instance.new("UIListLayout")
+SidebarLayout.Parent = Sidebar
+SidebarLayout.SortOrder = Enum.SortOrder.LayoutOrder
+SidebarLayout.Padding = UDim.new(0, 5)
+
+local function ClearContent()
+    for _, v in pairs(Content:GetChildren()) do
+        if v:IsA("GuiObject") then
+            v:Destroy()
+        end
+    end
+end
+
+local minimized = false
+MinimizeButton.MouseButton1Click:Connect(function()
+    if not minimized then
+        local minimizeTween = TweenService:Create(Frame, TweenInfo.new(0.5, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {Size = UDim2.new(0, frameWidth, 0, 40), BackgroundTransparency = 0.5})
+        minimizeTween:Play()
+        MinimizeButton.Text = "+"
+    else
+        local restoreTween = TweenService:Create(Frame, TweenInfo.new(0.5, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {Size = UDim2.new(0, frameWidth, 0, frameHeight), BackgroundTransparency = 0})
+        restoreTween:Play()
+        MinimizeButton.Text = "-"
+    end
+    minimized = not minimized
+end)
+
+local appearTween = TweenService:Create(Frame, TweenInfo.new(0.6, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {BackgroundTransparency = 0})
+appearTween:Play()
+
+local function SetTitle(name)
+    Title.Text = name
+end
+
+local function createTab(name, callback)
+    local Tab = Instance.new("TextButton")
+    Tab.Parent = Sidebar
+    Tab.LayoutOrder = Content
+    Tab.Text = name
+    Tab.Size = UDim2.new(1, 0, 0, 40)
+    Tab.Position = UDim2.new(0, 0, 0, Content)
+    Tab.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+    Tab.TextColor3 = Color3.fromRGB(255, 50, 50)
+    Tab.Font = Enum.Font.GothamBold
+    Tab.TextSize = isMobile and 14 or 16
+
+    local TabCorner = Instance.new("UICorner")
+    TabCorner.CornerRadius = UDim.new(0, 8)
+    TabCorner.Parent = Tab
+
+    Tab.MouseButton1Click:Connect(function()
+        ClearContent()
+        callback()
+    end)
+end
+
+local function createButton(text, callback)
+    local Button = Instance.new("TextButton")
+    Button.Parent = Content
+    Button.Size = UDim2.new(1, 0, 0, 40)
+    Button.Text = text
+    Button.Font = Enum.Font.GothamBold
+    Button.TextSize = isMobile and 14 or 16
+    Button.TextColor3 = Color3.fromRGB(255, 255, 255)
+    Button.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+
+    local ButtonCorner = Instance.new("UICorner")
+    ButtonCorner.CornerRadius = UDim.new(0, 8)
+    ButtonCorner.Parent = Button
+
+    Button.MouseButton1Click:Connect(callback)
+end
+
+local function createToggle(text, defaultState, callback)
+    local Toggle = Instance.new("TextButton")
+    Toggle.Parent = Content
+    Toggle.Size = UDim2.new(1, 0, 0, 40)
+    Toggle.Text = text .. " (Off)"
+    Toggle.Font = Enum.Font.GothamBold
+    Toggle.TextSize = isMobile and 14 or 16
+    Toggle.TextColor3 = Color3.fromRGB(255, 255, 255)
+    Toggle.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+
+    local ToggleCorner = Instance.new("UICorner")
+    ToggleCorner.CornerRadius = UDim.new(0, 8)
+    ToggleCorner.Parent = Toggle
+
+    local isToggled = defaultState or false
+    if isToggled then
+        Toggle.Text = text .. " (On)"
+        Toggle.BackgroundColor3 = Color3.fromRGB(50, 200, 50)
+    end
+
+    Toggle.MouseButton1Click:Connect(function()
+        isToggled = not isToggled
+        if isToggled then
+            Toggle.Text = text .. " (On)"
+            Toggle.BackgroundColor3 = Color3.fromRGB(50, 200, 50)
+        else
+            Toggle.Text = text .. " (Off)"
+            Toggle.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+        end
+        callback(isToggled)
+    end)
+
+    return Toggle
+end
+
+function createLabel(text, size, textColor, font, textSize)
+    local label = Instance.new("TextLabel", Content)
+    label.Text = text
+    label.Size = size or UDim2.new(1, 0, 0, 40)
+    label.TextColor3 = textColor or Color3.fromRGB(255, 50, 50)
+    label.BackgroundTransparency = 1
+    label.Font = font or Enum.Font.GothamBold
+    label.TextSize = textSize or 16
+    return label
+end
+
+local function createTextBox(placeholderText, callback)
+    local TextBox = Instance.new("TextBox")
+    TextBox.Parent = Content
+    TextBox.Size = UDim2.new(1, 0, 0, 40)
+    TextBox.Text = ""
+    TextBox.PlaceholderText = placeholderText
+    TextBox.Font = Enum.Font.GothamBold
+    TextBox.TextSize = isMobile and 14 or 16
+    TextBox.TextColor3 = Color3.fromRGB(255, 255, 255)
+    TextBox.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+    TextBox.ClearTextOnFocus = false
+
+    local TextBoxCorner = Instance.new("UICorner")  
+    TextBoxCorner.CornerRadius = UDim.new(0, 8)  
+    TextBoxCorner.Parent = TextBox  
+
+    TextBox.FocusLost:Connect(function(enterPressed)
+        if enterPressed then
+            callback(TextBox.Text)
+        end
+    end)
+
+    return TextBox
+end
+
+ToggleButton.Parent = KetHub
+ToggleButton.Size = UDim2.new(0, 50, 0, 50)
+ToggleButton.Position = UDim2.new(0, 10, 0.5, -25)
+ToggleButton.BackgroundColor3 = Color3.fromRGB(255, 50, 50)
+ToggleButton.Text = ">"
+ToggleButton.Font = Enum.Font.GothamBold
+ToggleButton.TextSize = isMobile and 14 or 18
+ToggleButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+ToggleButton.Draggable = true
+
+ToggleButton.MouseButton1Click:Connect(function()
+    Frame.Visible = not Frame.Visible
+    ToggleButton.Text = Frame.Visible and ">" or "<"
+end)
+
+local ToggleCorner = Instance.new("UICorner")
+ToggleCorner.CornerRadius = UDim.new(1, 0)
+ToggleCorner.Parent = ToggleButton
