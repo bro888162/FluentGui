@@ -1,7 +1,7 @@
 local UserInputService = game:GetService("UserInputService")
 local TweenService = game:GetService("TweenService")
 local RunService = game:GetService("RunService")
-
+local BloxLib = {}
 local KetHub = Instance.new("ScreenGui")
 KetHub.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
 
@@ -103,7 +103,7 @@ SidebarLayout.Parent = Sidebar
 SidebarLayout.SortOrder = Enum.SortOrder.LayoutOrder
 SidebarLayout.Padding = UDim.new(0, 5)
 
-local function ClearContent()
+function BloxLib:ClearContent()
     for _, v in pairs(Content:GetChildren()) do
         if v:IsA("GuiObject") then
             v:Destroy()
@@ -132,7 +132,7 @@ local function SetTitle(name)
     Title.Text = name
 end
 
-local function createTab(name, callback)
+function BloxLib:createTab(name, callback)
     local Tab = Instance.new("TextButton")
     Tab.Parent = Sidebar
     Tab.LayoutOrder = Content
@@ -154,7 +154,7 @@ local function createTab(name, callback)
     end)
 end
 
-local function createButton(text, callback)
+function BloxLib:createButton(text, callback)
     local Button = Instance.new("TextButton")
     Button.Parent = Content
     Button.Size = UDim2.new(1, 0, 0, 40)
@@ -171,7 +171,7 @@ local function createButton(text, callback)
     Button.MouseButton1Click:Connect(callback)
 end
 
-local function createColorButton(text, color, callback)
+function BloxLib:createColorButton(text, color, callback)
     local Button = Instance.new("TextButton")
     Button.Parent = Content
     Button.Size = UDim2.new(1, 0, 0, 40)
@@ -190,7 +190,7 @@ local function createColorButton(text, color, callback)
     return Button
 end
 
-local function createToggle(text, defaultState, callback)
+function BloxLib:createToggle(text, defaultState, callback)
     local Toggle = Instance.new("TextButton")
     Toggle.Parent = Content
     Toggle.Size = UDim2.new(1, 0, 0, 40)
@@ -225,7 +225,7 @@ local function createToggle(text, defaultState, callback)
     return Toggle
 end
 
-function createLabel(text, size, textColor, font, textSize)
+function BloxLib:createLabel(text, size, textColor, font, textSize)
     local label = Instance.new("TextLabel", Content)
     label.Text = text
     label.Size = size or UDim2.new(1, 0, 0, 40)
@@ -236,7 +236,7 @@ function createLabel(text, size, textColor, font, textSize)
     return label
 end
 
-local function createTextBox(placeholderText, callback)
+function BloxLib:createTextBox(placeholderText, callback)
     local TextBox = Instance.new("TextBox")
     TextBox.Parent = Content
     TextBox.Size = UDim2.new(1, 0, 0, 40)
@@ -279,3 +279,5 @@ end)
 local ToggleCorner = Instance.new("UICorner")
 ToggleCorner.CornerRadius = UDim.new(1, 0)
 ToggleCorner.Parent = ToggleButton
+
+return BloxLib
