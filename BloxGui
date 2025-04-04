@@ -149,7 +149,7 @@ function BloxLib:createTab(name, callback)
     TabCorner.Parent = Tab
 
     Tab.MouseButton1Click:Connect(function()
-        ClearContent()
+        BloxLib:ClearContent()
         callback()
     end)
 end
