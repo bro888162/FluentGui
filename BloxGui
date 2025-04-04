@@ -280,4 +280,5 @@ local ToggleCorner = Instance.new("UICorner")
 ToggleCorner.CornerRadius = UDim.new(1, 0)
 ToggleCorner.Parent = ToggleButton
 
+BloxLib.Content = Content
 return BloxLib
