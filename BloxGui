@@ -261,6 +261,10 @@ function BloxLib:createTextBox(placeholderText, callback)
     return TextBox
 end
 
+function BloxLib:getContent()
+    return Content
+end
+
 ToggleButton.Parent = KetHub
 ToggleButton.Size = UDim2.new(0, 50, 0, 50)
 ToggleButton.Position = UDim2.new(0, 10, 0.5, -25)
