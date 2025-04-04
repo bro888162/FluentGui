@@ -128,7 +128,7 @@ end)
 local appearTween = TweenService:Create(Frame, TweenInfo.new(0.6, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {BackgroundTransparency = 0})
 appearTween:Play()
 
-local function SetTitle(name)
+function BloxLib:SetTitle(name)
     Title.Text = name
 end
 
