@@ -171,6 +171,23 @@ local function createButton(text, callback)
     Button.MouseButton1Click:Connect(callback)
 end
 
+local function createColorButton(text, color, callback)
+    local Button = Instance.new("TextButton")
+    Button.Parent = Content
+    Button.Size = UDim2.new(1, 0, 0, 40)
+    Button.Text = text
+    Button.Font = Enum.Font.GothamBold
+    Button.TextSize = isMobile and 14 or 16
+    Button.TextColor3 = Color3.fromRGB(255, 255, 255)
+    Button.BackgroundColor3 = color
+
+    local ButtonCorner = Instance.new("UICorner")
+    ButtonCorner.CornerRadius = UDim.new(0, 8)
+    ButtonCorner.Parent = Button
+
+    Button.MouseButton1Click:Connect(callback)
+end
+
 local function createToggle(text, defaultState, callback)
     local Toggle = Instance.new("TextButton")
     Toggle.Parent = Content
