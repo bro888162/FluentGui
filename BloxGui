@@ -186,6 +186,8 @@ local function createColorButton(text, color, callback)
     ButtonCorner.Parent = Button
 
     Button.MouseButton1Click:Connect(callback)
+
+    return Button
 end
 
 local function createToggle(text, defaultState, callback)
