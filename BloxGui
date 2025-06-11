@@ -4,7 +4,7 @@ local RunService = game:GetService("RunService")
 local BloxLib = {}
 local KetHub = Instance.new("ScreenGui")
 KetHub.ResetOnSpawn = false
-KetHub.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
+KetHub.Parent = game.CoreGui
 
 local Frame = Instance.new("Frame")
 local Title = Instance.new("TextLabel")
