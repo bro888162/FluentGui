@@ -262,6 +262,65 @@ function BloxLib:createTextBox(placeholderText, callback)
     return TextBox
 end
 
+function BloxLib:createDropdown(name, items, callback, defaultValue)
+    local selectedValue = defaultValue or nil
+
+    local DropdownFrame = Instance.new("Frame")
+    DropdownFrame.Parent = Content
+    DropdownFrame.Size = UDim2.new(1, 0, 0, 40)
+    DropdownFrame.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+
+    local UICorner = Instance.new("UICorner")
+    UICorner.CornerRadius = UDim.new(0, 8)
+    UICorner.Parent = DropdownFrame
+
+    local DropdownButton = Instance.new("TextButton")
+    DropdownButton.Parent = DropdownFrame
+    DropdownButton.Size = UDim2.new(1, 0, 1, 0)
+    DropdownButton.BackgroundTransparency = 1
+    DropdownButton.Text = name .. ": " .. (selectedValue or "Select")
+    DropdownButton.Font = Enum.Font.GothamBold
+    DropdownButton.TextSize = isMobile and 14 or 16
+    DropdownButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+
+    local DropdownList = Instance.new("Frame")
+    DropdownList.Parent = Content
+    DropdownList.Size = UDim2.new(1, 0, 0, #items * 40)
+    DropdownList.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+    DropdownList.Visible = false
+
+    local ListLayout = Instance.new("UIListLayout")
+    ListLayout.Parent = DropdownList
+    ListLayout.SortOrder = Enum.SortOrder.LayoutOrder
+    ListLayout.Padding = UDim.new(0, 2)
+
+    DropdownButton.MouseButton1Click:Connect(function()
+        DropdownList.Visible = not DropdownList.Visible
+    end)
+
+    for _, item in ipairs(items) do
+        local Option = Instance.new("TextButton")
+        Option.Parent = DropdownList
+        Option.Size = UDim2.new(1, 0, 0, 40)
+        Option.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+        Option.Text = tostring(item)
+        Option.Font = Enum.Font.Gotham
+        Option.TextSize = 14
+        Option.TextColor3 = Color3.fromRGB(255, 255, 255)
+
+        local OptionCorner = Instance.new("UICorner")
+        OptionCorner.CornerRadius = UDim.new(0, 6)
+        OptionCorner.Parent = Option
+
+        Option.MouseButton1Click:Connect(function()
+            selectedValue = item
+            DropdownButton.Text = name .. ": " .. tostring(item)
+            DropdownList.Visible = false
+            callback(item)
+        end)
+    end
+end
+
 function BloxLib:getContent()
     return Content
 end
